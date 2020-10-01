@@ -1,8 +1,19 @@
 #!/bin/sh
 
 #SOFTWARE INSTALL
-echo "software install starting ..."
+echo "installing apache, mariadb, and php ..."
 apt update -qq && apt upgrade -qq && apt install -qq git unzip php php-cli php-fpm php-json php-pdo php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath php-tokenizer php-imagick mariadb-server
+
+#APACHE-PHP MODIFY CONFIG
+echo "adding rewrite rules to apache ..."
+a2enmod rewrite expires headers
+sed -i '0,/AllowOverride None/s//AllowOverride All/; 2,/AllowOverride None/s//AllowOverride All/; 0,/Require all denied/s//Require all granted/' /etc/apache2/apache2.conf
+echo "silencing apache server tokens from server ..."
+printf "\n#Remove Server Tokens\nServerTokens Prod\n#Remove server signature\nServerSignature Off" >> /etc/apache2/apache2.conf
+echo "updating php.ini for higher memory and upload size ..."
+sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 1G/g;s/post_max_size = 8M/post_max_size = 1G/g;s/memory_limit = 128M/memory_limit = 512M/g;s/max_execution_time = 30/max_execution_time = 300/g;s/max_input_time = 60/max_input_time = 300/g;' /etc/php/7.4/apache2/php.ini
+echo "restarting apache2 ..."
+systemctl restart apache2
 
 #DATABASE CONFIGURE
 echo "Would you like to configure the database now? [Y/n]"
@@ -21,18 +32,11 @@ if [ "$CONFIRM_DATABASE_CONFIGURE" != "${CONFIRM_DATABASE_CONFIGURE#[Yy]}" ] ;th
         mysql -e "CREATE DATABASE ${DATBASE_NAME}; FLUSH PRIVILEGES;"
         echo "Success: database complete ..."
     else
-        echo "Error: database configuration skipped"
+        echo "Notice: database configuration exited"
     fi
 else
-    echo "Warning: database configuration incomplete"
+    echo "Warning: database configuration skipped"
 fi
-
-#APACHE-PHP MODIFY CONFIG
-a2enmod rewrite expires headers
-sed -i '0,/AllowOverride None/s//AllowOverride All/; 2,/AllowOverride None/s//AllowOverride All/; 0,/Require all denied/s//Require all granted/' /etc/apache2/apache2.conf
-printf "\n#Remove Server Tokens\nServerTokens Prod\n#Remove server signature\nServerSignature Off" >> /etc/apache2/apache2.conf
-sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 1G/g;s/post_max_size = 8M/post_max_size = 1G/g;s/memory_limit = 128M/memory_limit = 512M/g;s/max_execution_time = 30/max_execution_time = 300/g;s/max_input_time = 60/max_input_time = 300/g;' /etc/php/7.4/apache2/php.ini
-systemctl restart apache2
 
 rm -- "$0"
 exit

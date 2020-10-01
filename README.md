@@ -1,4 +1,4 @@
 # ubuntu-php-mariadb-apache-install
 
 ### Run this code below to execute the script and install software for PHP and Database.
-`sudo curl -o software-install.sh https://raw.githubusercontent.com/wjcarey/ubuntu-php-mariadb-apache-install/master/master/software-install.sh && sudo chmod 777 software-install.sh && sudo ./software-install.sh`
+`sudo curl -o ubuntu-apache-maria-php.sh https://raw.githubusercontent.com/wjcarey/ubuntu-apache-maria-php/master/ubuntu-apache-maria-php.sh && sudo chmod 777 ubuntu-apache-maria-php.sh && sudo ./ubuntu-apache-maria-php.sh`
