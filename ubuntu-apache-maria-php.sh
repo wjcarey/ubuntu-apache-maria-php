@@ -2,7 +2,7 @@
 
 #SOFTWARE INSTALL
 echo "updating linux then installing apache, mariadb, and php ..."
-apt update -qq && apt upgrade -qq && apt install -qq git unzip php php-cli php-fpm php-json php-pdo php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath php-tokenizer php-imagick mariadb-server
+apt update -y && apt upgrade -y && apt install -y git unzip php php-cli php-fpm php-json php-pdo php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath php-tokenizer php-imagick mariadb-server
 echo "success: software install complete ..."
 
 #DATABASE CONFIGURE
