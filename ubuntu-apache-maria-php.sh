@@ -32,6 +32,8 @@ if [ "$CONFIRM_DATABASE_INSTALL" != "${CONFIRM_DATABASE_INSTALL#[Yy]}" ] ;then
     mysql -e "DROP USER 'root'@'localhost'; CREATE USER 'root'@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; CREATE USER '${2}'@'%' IDENTIFIED BY '${3}'; GRANT ALL PRIVILEGES ON *.* TO '${2}'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
     mysql -e "CREATE DATABASE ${1}; FLUSH PRIVILEGES;"
     echo "Success: database complete ..."
+else
+   echo "notice: database config skipped by user ..." 
 fi
 
 #SELF DELETE AND EXIT
